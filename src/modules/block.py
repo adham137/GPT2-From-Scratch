@@ -1,6 +1,7 @@
 from torch import nn
 
 from .mlp import MLP
+from .attention import CausalSelfAttention
 
 class Block(nn.Module):
 
