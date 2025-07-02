@@ -17,6 +17,26 @@ class GPT2Transformer(nn.Module):
         ))
         self.lm_head = nn.Linear(config.embedding_size, config.vocab_size, bias=False)
 
+    def forward(self, idx):
+        B, T = idx.size()   # idx (B, T)
+        # get the position embeddings
+        pos = torch.arange(0, T, dtype=torch.long, device=idx.device)
+        pos_embd = self.transformer.wpe(pos)
+        # get the token embeddings
+        tok_embd = self.transformer.wte(idx)
+        # add them
+        x = pos_embd + tok_embd
+        # forward through each block of the transformer
+        for block in self.transformer.h:
+            x = block(x)
+        # forward through the final layer norm
+        x = self.transformer.ln_f(x)
+        # get the logits
+        logits = self.lm_head(x)
+
+        return logits
+
+
     @classmethod
     def load_from_pretrained(cls, model_type, override_args=None):
         assert model_type in {'gpt2', 'gpt2-medium', 'gpt2-large', 'gpt2-xl'}
