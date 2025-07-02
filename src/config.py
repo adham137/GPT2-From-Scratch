@@ -7,4 +7,5 @@ class GPTConfig:
     block_size: int = 1024      # The context window
     n_layer: int = 12           # Number of layers in the transformers
     n_head: int = 12            # Number of attention heads
-    bias: bool
+    bias: bool = True
+    dropout: float = 0.0 
