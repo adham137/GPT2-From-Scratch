@@ -1,5 +1,7 @@
 from torch import nn
 
+from .mlp import MLP
+
 class Block(nn.Module):
 
     def __init__(self, config):
